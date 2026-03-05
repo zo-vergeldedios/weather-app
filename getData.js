@@ -34,16 +34,6 @@ async function fetchData() {
         temperature,
       });
     }
-    // let newTime;
-    // for (let i = -1; i >= -10; i--) {
-    //   newTime = time.at(i);
-    //   let newTemp = temperature.at(i);
-    //   console.log(timeForDatabase, newTemp);
-
-    // }
-    // let indexOfTime = newTime.indexOf(temperature);
-    // console.log(modifiedDate);
-    // sendSimpleMessage();
   } catch (error) {
     console.log(error.message);
   }

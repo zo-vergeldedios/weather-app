@@ -5,7 +5,7 @@ import Mailgun from "mailgun.js"; // mailgun.js v11.1.0
 
 async function fetchData() {
   const [latitude, longitude] = process.env.LOCATION.split(",");
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&timezone=GMT`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weather_code,cloud_cover&timezone=auto`;
 
   try {
     const response = await fetch(url);
@@ -16,6 +16,8 @@ async function fetchData() {
 
     // console.log(result);
     const temperature = result.hourly.temperature_2m;
+    const cloudCover = result.hourly.cloud_cover;
+    const weatherCode = result.hourly.weather_code;
 
     // console.log(temperature);
     const date = new Date().toJSON();
@@ -25,25 +27,32 @@ async function fetchData() {
     const time = result.hourly.time;
     const indexOfTime = time.indexOf(modifiedDate);
 
-    // console.log();
+    // console.log(cloudCover);
     // console.log(temperature[indexOfTime]);
     const timeForDatabase = time[indexOfTime].replace("T", " ") + ":00";
+    // const translatingWeatherCode = (weatherCode[indexOfTime]) => {
+
+    // }
 
     insertWeather({
       longitude: longitude,
       latitude: latitude,
       timestamp: timeForDatabase,
       temperature: temperature[indexOfTime],
+      cloudCover: cloudCover[indexOfTime],
+      // weatherCode: ,
     });
     // console.log(weatherOutput);
 
-    // sendSimpleMessage();
+    sendSimpleMessage(temperature[indexOfTime], cloudCover[indexOfTime]);
   } catch (error) {
     console.log(error.message);
   }
 }
 
-setInterval(fetchData, 10000);
+//
+fetchData();
+// setInterval(fetchData, 10000);
 //Get the longitude, latitude, timestamp and temperature.
 //Create database in supabase
 //Use the library from supabase, connect it to weather app
@@ -54,9 +63,15 @@ const sql = postgres(
     "@db.hnwfcdxvuuuzqkilxenb.supabase.co:5432/postgres",
 ); // will use psql environment variables
 
-async function insertWeather({ longitude, latitude, timestamp, temperature }) {
+async function insertWeather({
+  longitude,
+  latitude,
+  timestamp,
+  temperature,
+  cloudCover,
+}) {
   console.log("1");
-  await sql`insert into weather values(${longitude}, ${latitude}, ${timestamp}, ${temperature})`;
+  await sql`insert into weather values(${longitude}, ${latitude}, ${timestamp}, ${temperature}, ${cloudCover})`;
   console.log("2");
 }
 
@@ -73,7 +88,7 @@ async function insertWeather({ longitude, latitude, timestamp, temperature }) {
 
 //MailGun API
 
-async function sendSimpleMessage(weather) {
+async function sendSimpleMessage(temperature, cloudCover, weatherCode) {
   const mailgun = new Mailgun(FormData);
   const mg = mailgun.client({
     username: "api",
@@ -92,7 +107,8 @@ async function sendSimpleMessage(weather) {
           ".mailgun.org>",
         to: ["Renzo <zo.vergeldedios@gmail.com>"],
         subject: "Weather for today",
-        text: `Good morning! The temperature for today's weather is ${weather}`,
+        text: `Hello! Right now the temperature is ${temperature}	°C, and it is ${cloudCover}% cloudy. `,
+        // The weather for today is ${weatherCode}
       },
     );
 
