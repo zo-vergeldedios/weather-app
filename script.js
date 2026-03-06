@@ -30,9 +30,39 @@ async function fetchData() {
     // console.log(cloudCover);
     // console.log(temperature[indexOfTime]);
     const timeForDatabase = time[indexOfTime].replace("T", " ") + ":00";
-    // const translatingWeatherCode = (weatherCode[indexOfTime]) => {
-
-    // }
+    const weather = weatherCode[indexOfTime];
+    const translatingWeatherCode = (weathercode) => {
+      if (weathercode == 0) {
+        return "Clear Sky";
+      } else if (weathercode == 1 || weathercode == 2 || weathercode == 3) {
+        return "Partly Cloudy";
+      } else if (weathercode == 45 || weathercode == 48) {
+        return "Fog";
+      } else if (weathercode == 51 || weathercode == 53 || weathercode == 55) {
+        return "Drizzle";
+      } else if (weathercode == 56 || weathercode == 57) {
+        return "Freezing Drizzle";
+      } else if (weathercode == 61 || weathercode == 63 || weathercode == 65) {
+        return "Rain";
+      } else if (weathercode == 66 || weathercode == 67) {
+        return "Freezing Rain";
+      } else if (weathercode == 95) {
+        return "Thunder Storm";
+      } else return "Weather not found";
+      //       0	Clear sky
+      // 1, 2, 3	Mainly clear, partly cloudy, and overcast
+      // 45, 48	Fog and depositing rime fog
+      // 51, 53, 55	Drizzle: Light, moderate, and dense intensity
+      // 56, 57	Freezing Drizzle: Light and dense intensity
+      // 61, 63, 65	Rain: Slight, moderate and heavy intensity
+      // 66, 67	Freezing Rain: Light and heavy intensity
+      // 71, 73, 75	Snow fall: Slight, moderate, and heavy intensity
+      // 77	Snow grains
+      // 80, 81, 82	Rain showers: Slight, moderate, and violent
+      // 85, 86	Snow showers slight and heavy
+      // 95 *	Thunderstorm: Slight or moderate
+      // 96, 99 *
+    };
 
     insertWeather({
       longitude: longitude,
@@ -40,11 +70,15 @@ async function fetchData() {
       timestamp: timeForDatabase,
       temperature: temperature[indexOfTime],
       cloudCover: cloudCover[indexOfTime],
-      // weatherCode: ,
+      weatherCode: translatingWeatherCode(weather),
     });
     // console.log(weatherOutput);
 
-    sendSimpleMessage(temperature[indexOfTime], cloudCover[indexOfTime]);
+    sendSimpleMessage(
+      temperature[indexOfTime],
+      cloudCover[indexOfTime],
+      translatingWeatherCode(weather),
+    );
   } catch (error) {
     console.log(error.message);
   }
@@ -69,9 +103,10 @@ async function insertWeather({
   timestamp,
   temperature,
   cloudCover,
+  weatherCode,
 }) {
   console.log("1");
-  await sql`insert into weather values(${longitude}, ${latitude}, ${timestamp}, ${temperature}, ${cloudCover})`;
+  await sql`insert into weather values(${longitude}, ${latitude}, ${timestamp}, ${temperature}, ${cloudCover}, ${weatherCode})`;
   console.log("2");
 }
 
@@ -88,7 +123,7 @@ async function insertWeather({
 
 //MailGun API
 
-async function sendSimpleMessage(temperature, cloudCover, weatherCode) {
+async function sendSimpleMessage(temperature, cloudCover, weather) {
   const mailgun = new Mailgun(FormData);
   const mg = mailgun.client({
     username: "api",
@@ -107,8 +142,7 @@ async function sendSimpleMessage(temperature, cloudCover, weatherCode) {
           ".mailgun.org>",
         to: ["Renzo <zo.vergeldedios@gmail.com>"],
         subject: "Weather for today",
-        text: `Hello! Right now the temperature is ${temperature}	°C, and it is ${cloudCover}% cloudy. `,
-        // The weather for today is ${weatherCode}
+        text: `Hello! Right now the temperature is ${temperature}°C, and it is ${cloudCover}% cloudy. We have ${weather} today`,
       },
     );
 
