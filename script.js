@@ -32,23 +32,23 @@ async function fetchData() {
     const timeForDatabase = time[indexOfTime].replace("T", " ") + ":00";
     const weather = weatherCode[indexOfTime];
     const translatingWeatherCode = (weathercode) => {
-      if (weathercode == 0) {
-        return "Clear Sky";
-      } else if (weathercode == 1 || weathercode == 2 || weathercode == 3) {
-        return "Partly Cloudy";
-      } else if (weathercode == 45 || weathercode == 48) {
-        return "Fog";
-      } else if (weathercode == 51 || weathercode == 53 || weathercode == 55) {
-        return "Drizzle";
-      } else if (weathercode == 56 || weathercode == 57) {
-        return "Freezing Drizzle";
-      } else if (weathercode == 61 || weathercode == 63 || weathercode == 65) {
-        return "Rain";
-      } else if (weathercode == 66 || weathercode == 67) {
-        return "Freezing Rain";
-      } else if (weathercode == 95) {
-        return "Thunder Storm";
-      } else return "Weather not found";
+      // if (weathercode == 0) {
+      //   return "Clear Sky";
+      // } else if (weathercode == 1 || weathercode == 2 || weathercode == 3) {
+      //   return "Partly Cloudy";
+      // } else if (weathercode == 45 || weathercode == 48) {
+      //   return "Fog";
+      // } else if (weathercode == 51 || weathercode == 53 || weathercode == 55) {
+      //   return "Drizzle";
+      // } else if (weathercode == 56 || weathercode == 57) {
+      //   return "Freezing Drizzle";
+      // } else if (weathercode == 61 || weathercode == 63 || weathercode == 65) {
+      //   return "Rain";
+      // } else if (weathercode == 66 || weathercode == 67) {
+      //   return "Freezing Rain";
+      // } else if (weathercode == 95) {
+      //   return "Thunder Storm";
+      // } else return "Weather not found";
       //       0	Clear sky
       // 1, 2, 3	Mainly clear, partly cloudy, and overcast
       // 45, 48	Fog and depositing rime fog
@@ -62,6 +62,35 @@ async function fetchData() {
       // 85, 86	Snow showers slight and heavy
       // 95 *	Thunderstorm: Slight or moderate
       // 96, 99 *
+      switch (weathercode) {
+        case 0:
+          return "Clear Sky";
+        case 1: // case 1:
+        case 2:
+        case 3:
+          return "Partly Cloudy";
+        case 45:
+        case 48:
+          return "Fog";
+        case 51:
+        case 53:
+        case 55:
+          return "Drizzle";
+        case 56:
+        case 57:
+          return "Freezing Drizzle";
+        case 61:
+        case 63:
+        case 65:
+          return "Rain";
+        case 66:
+        case 67:
+          return "Freezing Rain";
+        case 95:
+          return "Thunder Storm";
+        default:
+          return "Weather not found";
+      }
     };
 
     insertWeather({
