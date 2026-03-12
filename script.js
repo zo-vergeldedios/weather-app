@@ -98,7 +98,8 @@ async function fetchData() {
 
 //
 fetchData();
-// setInterval(fetchData, 10000);
+setInterval(fetchData, 3_600_000);
+
 //Get the longitude, latitude, timestamp and temperature.
 //Create database in supabase
 //Use the library from supabase, connect it to weather app
