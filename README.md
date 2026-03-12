@@ -18,11 +18,12 @@ The app is under `script.js`
 1. Create .env file and create the following values
 
 ```
-API_KEY="" # supabase
+API_KEY="" # mailgun
 EMAIL=""
 LOCATION="" # 11.11,22.22
 MAILGUN_KEY=""
 DATABASE_PASS="" # supabase db password
+PG_CONNECTION_STRING="postgresql://postgres:[Database_Password]@db.asdfasd.supabase.co:5432/postgres"
 ```
 
 2. Install node js on your computer.

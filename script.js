@@ -32,23 +32,6 @@ async function fetchData() {
     const timeForDatabase = time[indexOfTime].replace("T", " ") + ":00";
     const weather = weatherCode[indexOfTime];
     const translatingWeatherCode = (weathercode) => {
-      // if (weathercode == 0) {
-      //   return "Clear Sky";
-      // } else if (weathercode == 1 || weathercode == 2 || weathercode == 3) {
-      //   return "Partly Cloudy";
-      // } else if (weathercode == 45 || weathercode == 48) {
-      //   return "Fog";
-      // } else if (weathercode == 51 || weathercode == 53 || weathercode == 55) {
-      //   return "Drizzle";
-      // } else if (weathercode == 56 || weathercode == 57) {
-      //   return "Freezing Drizzle";
-      // } else if (weathercode == 61 || weathercode == 63 || weathercode == 65) {
-      //   return "Rain";
-      // } else if (weathercode == 66 || weathercode == 67) {
-      //   return "Freezing Rain";
-      // } else if (weathercode == 95) {
-      //   return "Thunder Storm";
-      // } else return "Weather not found";
       //       0	Clear sky
       // 1, 2, 3	Mainly clear, partly cloudy, and overcast
       // 45, 48	Fog and depositing rime fog
@@ -120,11 +103,13 @@ fetchData();
 //Create database in supabase
 //Use the library from supabase, connect it to weather app
 
-const sql = postgres(
+const sql = postgres(process.env.PG_CONNECTION_STRING);
+// PG_CONNECTION_STRING="postgresql://postgres:SOME_PASSWORD@db.hnwfcdxvuuuzqkilxenb.supabase.co:5432/postgres"
+/*
   "postgresql://postgres:" +
     process.env.DATABASE_PASS +
     "@db.hnwfcdxvuuuzqkilxenb.supabase.co:5432/postgres",
-); // will use psql environment variables
+); // will use psql environment variables */
 
 async function insertWeather({
   longitude,
@@ -139,17 +124,6 @@ async function insertWeather({
   console.log("2");
 }
 
-// insertWeather({
-//   longitude: 10,
-//   latitude: 12,
-//   timestamp: `2026-01-19T22:00`,
-//   temperature: 11,
-// });
-
-//Every hour it get the weather, setInterval, add a row to the database with the weather data.
-//Create a separate file, Logs the latest 10 results to supabase. (getDataResults)
-//put the password to supabase ENV
-
 //MailGun API
 
 async function sendSimpleMessage(temperature, cloudCover, weather) {
@@ -161,7 +135,6 @@ async function sendSimpleMessage(temperature, cloudCover, weather) {
     // url: "https://api.eu.mailgun.net"
   });
   try {
-    // HOMEWORK: instead of sending an email, create a new row in supabase with the weather and time
     const data = await mg.messages.create(
       process.env.MAILGUN_KEY + ".mailgun.org",
       {
