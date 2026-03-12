@@ -143,7 +143,7 @@ async function sendSimpleMessage(temperature, cloudCover, weather) {
           "Mailgun Sandbox <postmaster@" +
           process.env.MAILGUN_KEY +
           ".mailgun.org>",
-        to: ["Renzo <zo.vergeldedios@gmail.com>"],
+        to: [`${process.env.NAME} <${process.env.EMAIL}>`], //TODO Find the authorized email from mailgun.
         subject: "Weather for today",
         text: `Hello! Right now the temperature is ${temperature}°C, and it is ${cloudCover}% cloudy. We have ${weather} today`,
       },

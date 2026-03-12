@@ -21,6 +21,7 @@ The app is under `script.js`
 
 ```
 API_KEY="" # mailgun
+NAME=""cat
 EMAIL=""
 LOCATION="" # 11.11,22.22
 MAILGUN_KEY=""
