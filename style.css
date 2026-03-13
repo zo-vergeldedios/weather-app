@@ -1,5 +1,5 @@
 * {
-  background-color: white;
+  background-color: Black;
   margin: 0;
   padding: 0;
 }
@@ -7,21 +7,8 @@ body {
   display: flex;
   justify-content: center;
 }
-#content {
-  display: flex;
-  flex-direction: column;
-}
+
 h1 {
   margin-top: 20px;
-  color: black;
-}
-
-button {
-  color: black;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-p {
-  color: black;
+  color: yellow;
 }

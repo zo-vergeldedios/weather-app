@@ -96,7 +96,6 @@ async function fetchData() {
   }
 }
 
-//
 fetchData();
 setInterval(fetchData, 3_600_000);
 
@@ -105,11 +104,9 @@ setInterval(fetchData, 3_600_000);
 //Use the library from supabase, connect it to weather app
 
 const sql = postgres(process.env.PG_CONNECTION_STRING);
-// PG_CONNECTION_STRING="postgresql://postgres:SOME_PASSWORD@db.hnwfcdxvuuuzqkilxenb.supabase.co:5432/postgres"
+// PG_CONNECTION_STRING="postgresql://postgres:SOME_PASSWORD@db.asdfasdf.supabase.co:5432/postgres"
 /*
-  "postgresql://postgres:" +
-    process.env.DATABASE_PASS +
-    "@db.hnwfcdxvuuuzqkilxenb.supabase.co:5432/postgres",
+ 
 ); // will use psql environment variables */
 
 async function insertWeather({
@@ -143,7 +140,7 @@ async function sendSimpleMessage(temperature, cloudCover, weather) {
           "Mailgun Sandbox <postmaster@" +
           process.env.MAILGUN_KEY +
           ".mailgun.org>",
-        to: [`${process.env.NAME} <${process.env.EMAIL}>`], //TODO Find the authorized email from mailgun.
+        to: [`${process.env.NAME} <${process.env.EMAIL}>`], //This needs to be an authorized email from mail gun.
         subject: "Weather for today",
         text: `Hello! Right now the temperature is ${temperature}°C, and it is ${cloudCover}% cloudy. We have ${weather} today`,
       },
